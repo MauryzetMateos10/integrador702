@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/MauryzetMateos10/integrador702.git/static/css/main.a7d372e5.css",
-    "main.js": "/MauryzetMateos10/integrador702.git/static/js/main.e31de85f.js",
-    "static/js/453.ebcd9aff.chunk.js": "/MauryzetMateos10/integrador702.git/static/js/453.ebcd9aff.chunk.js",
-    "index.html": "/MauryzetMateos10/integrador702.git/index.html",
-    "main.a7d372e5.css.map": "/MauryzetMateos10/integrador702.git/static/css/main.a7d372e5.css.map",
-    "main.e31de85f.js.map": "/MauryzetMateos10/integrador702.git/static/js/main.e31de85f.js.map",
-    "453.ebcd9aff.chunk.js.map": "/MauryzetMateos10/integrador702.git/static/js/453.ebcd9aff.chunk.js.map"
+    "main.css": "/integrador702/static/css/main.a7d372e5.css",
+    "main.js": "/integrador702/static/js/main.f8dac929.js",
+    "static/js/453.ebcd9aff.chunk.js": "/integrador702/static/js/453.ebcd9aff.chunk.js",
+    "index.html": "/integrador702/index.html",
+    "main.a7d372e5.css.map": "/integrador702/static/css/main.a7d372e5.css.map",
+    "main.f8dac929.js.map": "/integrador702/static/js/main.f8dac929.js.map",
+    "453.ebcd9aff.chunk.js.map": "/integrador702/static/js/453.ebcd9aff.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a7d372e5.css",
-    "static/js/main.e31de85f.js"
+    "static/js/main.f8dac929.js"
   ]
 }
