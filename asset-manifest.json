@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/MauryzetMateos10/integrador702.git/static/css/main.a7d372e5.css",
+    "main.js": "/MauryzetMateos10/integrador702.git/static/js/main.e31de85f.js",
+    "static/js/453.ebcd9aff.chunk.js": "/MauryzetMateos10/integrador702.git/static/js/453.ebcd9aff.chunk.js",
+    "index.html": "/MauryzetMateos10/integrador702.git/index.html",
+    "main.a7d372e5.css.map": "/MauryzetMateos10/integrador702.git/static/css/main.a7d372e5.css.map",
+    "main.e31de85f.js.map": "/MauryzetMateos10/integrador702.git/static/js/main.e31de85f.js.map",
+    "453.ebcd9aff.chunk.js.map": "/MauryzetMateos10/integrador702.git/static/js/453.ebcd9aff.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a7d372e5.css",
+    "static/js/main.e31de85f.js"
+  ]
+}
