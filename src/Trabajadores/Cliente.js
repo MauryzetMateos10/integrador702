@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../App.css';
+import '../App.css';  // Asegúrate de que el archivo CSS esté correctamente importado
 import {
     Chart as ChartJS,
     LinearScale,
@@ -28,12 +28,18 @@ const Cliente = () => {
     const [clientes, setClientes] = useState([]);
     const [error, setError] = useState(null);
 
+    // Función para generar colores aleatorios
+    const generateRandomColor = () => {
+        const randomColor = () => Math.floor(Math.random() * 256);
+        return `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 0.6)`;
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://alex.starcode.com.mx/apiBD.php');
+                const response = await fetch('https://alex.starcode.com.mx/apiAlumnos.php');
                 if (!response.ok) throw new Error('Network response was not ok');
-                
+
                 const data = await response.json();
                 setClientes(data);
             } catch (error) {
@@ -42,76 +48,63 @@ const Cliente = () => {
         };
 
         fetchData();
-        const interval = setInterval(fetchData, 2000);
-        return () => clearInterval(interval);
+        const interval = setInterval(fetchData, 2000); // Actualizar cada 2 segundos
+        return () => clearInterval(interval); // Limpiar intervalo al desmontar el componente
     }, []);
 
-    const lineChartData = {
+    // Datos para las gráficas
+    const nombresPracticas = Object.keys(clientes[0]?.practicas || {});
+
+    // Gráfico de barras con calificación promedio por estudiante
+    const barChartData = {
         labels: clientes.map(cliente => cliente.nombre),
         datasets: [
             {
-                label: 'ID de Clientes',
-                data: clientes.map(cliente => cliente.id),
-                borderColor: 'rgba(226, 125, 36, 1)',
-                backgroundColor: 'rgba(226, 125, 36, 0.4)',
+                label: 'Calificación Promedio',
+                data: clientes.map(cliente => {
+                    const calificaciones = Object.values(cliente.practicas).map(Number);
+                    return calificaciones.reduce((a, b) => a + b, 0) / calificaciones.length;
+                }),
+                backgroundColor: clientes.map(() => generateRandomColor()), // Colores aleatorios para cada barra
+                borderColor: clientes.map(() => generateRandomColor()), // Colores aleatorios para cada barra
+                borderWidth: 2,
+                barThickness: 40, // Grosor de las barras
+                hoverBackgroundColor: clientes.map(() => generateRandomColor()), // Color de hover
+                hoverBorderColor: clientes.map(() => generateRandomColor()),
+                hoverBorderWidth: 2,
+            },
+        ],
+    };
+
+    // Gráfico de pastel para cada estudiante
+    const pieChartsData = clientes.map((cliente, index) => {
+        return {
+            labels: nombresPracticas,
+            datasets: [{
+                label: `${cliente.nombre} - Distribución por práctica`,
+                data: nombresPracticas.map(practica => Number(cliente.practicas[practica])),
+                backgroundColor: nombresPracticas.map(() => generateRandomColor()),
+                borderColor: nombresPracticas.map(() => generateRandomColor()),
                 borderWidth: 1,
+            }],
+        };
+    });
+
+    // Gráfico de líneas para cada estudiante
+    const lineChartsData = clientes.map((cliente, index) => {
+        return {
+            labels: nombresPracticas,
+            datasets: [{
+                label: cliente.nombre,
+                data: nombresPracticas.map(practica => Number(cliente.practicas[practica])),
+                borderColor: generateRandomColor(),
+                backgroundColor: generateRandomColor(),
+                borderWidth: 1,
+                tension: 0.3,
                 fill: true,
-                tension: 0.2,
-            },
-        ],
-    };
-
-    const sexoCount = clientes.reduce((acc, cliente) => {
-        acc[cliente.sexo] = (acc[cliente.sexo] || 0) + 1;
-        return acc;
-    }, {});
-
-    const totalClientes = clientes.length;
-    const sexoPorcentaje = Object.keys(sexoCount).map(sexo => 
-        ((sexoCount[sexo] / totalClientes) * 100).toFixed(2)
-    );
-
-    const pieChartData = {
-        labels: Object.keys(sexoCount),
-        datasets: [
-            {
-                label: 'Porcentaje por Sexo',
-                data: sexoPorcentaje,
-                backgroundColor: [
-                    'rgba(255, 51, 249 , 0.6)',
-                    'rgba(255, 227, 48 , 0.6)',
-                    'rgba(85, 203, 227, 0.6)'
-                ],
-                borderColor: [
-                    'rgba(255, 51, 249 , 1)',
-                    'rgba(255, 227, 48 , 1)',
-                    'rgba(85, 203, 227, 1)'
-                ],
-                borderWidth: 1,
-            },
-        ],
-    };
-
-    const barChartData = {
-        labels: Object.keys(sexoCount),
-        datasets: [
-            {
-                label: 'Conteo por Sexo',
-                data: Object.values(sexoCount),
-                backgroundColor: [
-                    'rgba(255, 51, 249 , 0.6)',
-                    'rgba(255, 227, 48 , 0.6)',
-                    'rgba(85, 203, 227, 0.6)'
-                ],
-                borderColor: [
-                    'rgba(255, 51, 249 , 1)',
-                    'rgba(255, 227, 48 , 1)',
-                    'rgba(85, 203, 227, 1)'
-                ],
-                borderWidth: 1,
-            },
-        ],
-    };
+            }],
+        };
+    });
 
     const chartOptions = {
         maintainAspectRatio: false,
@@ -131,53 +124,112 @@ const Cliente = () => {
                     maxRotation: 0,
                     minRotation: 0,
                     padding: 10,
-                }
+                    font: {
+                        size: 14,
+                    },
+                },
+                grid: {
+                    drawBorder: false,
+                    color: 'rgba(0, 0, 0, 0.1)',
+                },
             },
             x: {
                 ticks: {
                     padding: 10,
-                }
+                    font: {
+                        size: 14,
+                    },
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)',
+                },
             }
         },
     };
 
+    // Función para asignar color a las celdas de la tabla basado en la calificación
+    const getCellColor = (calificacion) => {
+        const value = Number(calificacion);
+        if (value >= 9) return generateRandomColor();  // Colores aleatorios para calificaciones altas
+        if (value >= 7) return generateRandomColor();  // Colores aleatorios para calificaciones medias
+        return generateRandomColor();  // Colores aleatorios para calificaciones bajas
+    };
+
     return (
         <div className="container">
-            <h1 className="App App-link">Lista de Clientes</h1>
-            
-            <div className="card-container">
-                {error ? (
-                    <div className="error">Error: {error.message}</div>
-                ) : (
-                    clientes.map(cliente => (
-                        <div key={cliente.id} className="card">
-                            <div className="card-content">
-                                <h2>ID: {cliente.id}</h2>
+            <h1 className="App App-link">Prácticas de Clientes</h1>
+            {error ? (
+                <div className="error">Error: {error.message}</div>
+            ) : (
+                <>
+                    <div className="clientes-grid">
+                        {clientes.map(cliente => (
+                            <div className="cliente-card" key={cliente.id}>
+                                <p><strong>ID:</strong> {cliente.id}</p>
                                 <p><strong>Nombre:</strong> {cliente.nombre}</p>
-                                <p><strong>Teléfono:</strong> {cliente.telefono}</p>
-                                <p><strong>Sexo:</strong> {cliente.sexo}</p>
+                                <p><strong>Teléfono:</strong> {cliente.telefono || 'N/A'}</p>
+                                <p><strong>Sexo:</strong> {cliente.sexo || 'N/A'}</p>
                             </div>
-                        </div>
-                    ))
-                )}
-            </div>
-    
-            <div className="charts-container">
-                <div className="line-chart-container" style={{ maxWidth: '500px', height: '300px', margin: '20px' }}>
-                    <h2>Gráfica de IDs de Todos los Clientes</h2>
-                    <Line data={lineChartData} options={chartOptions} />
-                </div>
-    
-                <div className="bar-chart-container" style={{ maxWidth: '500px', height: '300px', margin: '20px' }}>
-                    <h2>Gráfica de Sexo de los Clientes</h2>
-                    <Bar data={barChartData} options={{ ...chartOptions, indexAxis: 'y' }} />
-                </div>
+                        ))}
+                    </div>
 
-                <div className="pie-chart-container" style={{ maxWidth: '500px', height: '300px', margin: '20px' }}>
-                    <h2>Porcentaje de Clientes por Sexo</h2>
-                    <Pie data={pieChartData} options={chartOptions} />
-                </div>
-            </div>
+                    <div className="charts-container">
+                        <div className="bar-chart-container" style={{ maxWidth: '500px', height: '300px', margin: '20px' }}>
+                            <h2>Promedio de Calificaciones por Estudiante</h2>
+                            <Bar data={barChartData} options={chartOptions} />
+                        </div>
+
+                        {pieChartsData.map((data, index) => (
+                            <div key={index} className="pie-chart-container" style={{ maxWidth: '500px', height: '300px', margin: '20px' }}>
+                                <h2>{clientes[index].nombre} - Distribución por Práctica</h2>
+                                <Pie data={data} options={chartOptions} />
+                            </div>
+                        ))}
+
+                        {lineChartsData.map((data, index) => (
+                            <div key={index} className="line-chart-container" style={{ maxWidth: '500px', height: '300px', margin: '20px' }}>
+                                <h2>{clientes[index].nombre} - Calificaciones por Práctica</h2>
+                                <Line data={data} options={chartOptions} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Tabla de calificaciones de las prácticas por estudiante */}
+                    <div className="tabla-container" style={{ marginTop: '40px' }}>
+                        <h2>Calificaciones de las Prácticas por Estudiante</h2>
+                        <table className="calificaciones-table">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    {nombresPracticas.map((practica, index) => (
+                                        <th key={index}>{practica}</th>
+                                    ))}
+                                    <th>Promedio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {clientes.map(cliente => {
+                                    const calificaciones = Object.values(cliente.practicas).map(Number);
+                                    const promedio = calificaciones.reduce((a, b) => a + b, 0) / calificaciones.length;
+                                    return (
+                                        <tr key={cliente.id}>
+                                            <td>{cliente.nombre}</td>
+                                            {nombresPracticas.map((practica, index) => (
+                                                <td key={index} style={{ backgroundColor: getCellColor(cliente.practicas[practica]), border: '1px solid #ccc', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                                                    {cliente.practicas[practica]}
+                                                </td>
+                                            ))}
+                                            <td style={{ border: '1px solid #ccc', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                                                {promedio.toFixed(2)}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
