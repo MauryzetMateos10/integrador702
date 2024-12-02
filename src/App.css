@@ -1,5 +1,8 @@
+/* Estilos Generales */
 .App {
   text-align: left;
+  background-color: #000; /* Fondo negro para toda la página */
+  color: #fff; /* Texto blanco para todo */
 }
 
 .App-logo {
@@ -7,12 +10,59 @@
   pointer-events: none;
 }
 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Enlaces */
+.App-link {
+  font-size: 2rem;
+  color: #d19ee9;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+/* Tarjetas de Clientes */
+.clientes-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center; /* Centra los cuadros en el contenedor */
+}
+
+.cliente-card {
+  background-color: #d19ee9;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #000;
+  max-width: 250px;
+  width: 100%;
+  text-align: left;
+}
+
+.cliente-card p {
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+/* Contenedor de Gráficas */
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Animaciones */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
 
+/* Encabezado */
 .App-header {
   background-color: #8b60c5; /* Cambiado a un tono morado */
   min-height: 10vh;
@@ -24,11 +74,13 @@
   color: white;
 }
 
+/* Enlaces en el Encabezado */
 .App-link {
   color: #c994ed; /* Mantiene el color de las letras */
   margin-left: 20px;
 }
 
+/* Animaciones de Logo */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -38,28 +90,26 @@
   }
 }
 
-.container {
-  padding: 20px;
-  text-align: center;
-}
-
+/* Títulos */
 .title {
   font-size: 2em;
   margin-bottom: 20px;
 }
 
+/* Contenedor de Tarjetas */
 .card-container {
   display: flex;
+  justify-content: center; /* Centra los cuadros en el contenedor */
   flex-wrap: wrap;
-  justify-content: center;
+  gap: 20px; /* Espacio entre los cuadros */
+  margin-top: 20px; /* Espacio arriba de los cuadros */
 }
 
 .card {
   background-color: #9f7bd5; /* Cambiado a un tono morado */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin: 10px;
-  width: 300px;
+  width: 300px; /* Ancho fijo de los cuadros */
   padding: 15px;
   text-align: left;
 }
@@ -68,19 +118,53 @@
   margin: 0;
 }
 
+/* Contenedor de Gráficas */
 .chart-container {
   background-color: #b9a1dd; /* Cambiado a un tono morado */
   height: 200px;
   margin-top: 10px;
 }
 
+/* Mensajes de Error */
 .error {
   color: red; /* Mantiene el color de error en rojo */
 }
 
+/* Estilos Adicionales para Gráficas */
 .charts-container {
   display: flex;
   justify-content: center;
   gap: 20px; /* Espacio entre las gráficas */
   flex-wrap: wrap; /* Ajusta las gráficas a múltiples filas en pantallas pequeñas */
+}
+
+.calificaciones-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border: 2px solid #ddd;
+}
+
+.calificaciones-table th,
+.calificaciones-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Sombra 3D */
+}
+
+.calificaciones-table th {
+  background-color: #444; /* Fondo gris oscuro para los encabezados */
+  color: #fff; /* Color blanco para el texto de los encabezados */
+  font-weight: bold;
+}
+
+.calificaciones-table td {
+  background-color: #000; /* Fondo negro para las celdas */
+  color: #fff; /* Texto blanco en las celdas */
+}
+
+.calificaciones-table td:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
